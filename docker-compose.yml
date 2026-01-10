@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:15
+    container_name: budget-tracker-postgres
+    environment:
+      POSTGRES_DB: budget
+      POSTGRES_USER: budget
+      POSTGRES_PASSWORD: budget
+    ports:
+      - "5433:5432"
+    volumes:
+      - budget_pgdata:/var/lib/postgresql/data
+
+volumes:
+  budget_pgdata:
