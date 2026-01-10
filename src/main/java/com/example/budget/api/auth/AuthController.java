@@ -1,5 +1,6 @@
 package com.example.budget.api.auth;
 
+import com.example.budget.api.auth.dto.AuthResponse;
 import com.example.budget.api.auth.dto.LoginRequest;
 import com.example.budget.api.auth.dto.RegisterRequest;
 import com.example.budget.application.auth.AuthService;
@@ -26,8 +27,8 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(@Valid @RequestBody LoginRequest req) {
-        User user = authService.login(req.username(), req.password());
-        return "ok userId=" + user.getId();
+    public AuthResponse login(@Valid @RequestBody LoginRequest req) {
+        String token = authService.loginAndGetToken(req.username(), req.password());
+        return new AuthResponse(token);
     }
 }

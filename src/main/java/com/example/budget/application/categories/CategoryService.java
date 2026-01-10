@@ -20,14 +20,13 @@ public class CategoryService {
         this.repo = repo;
     }
 
-    public CategoryResponse create(CreateCategoryRequest req) {
+    public CategoryResponse create(UUID userId, CreateCategoryRequest req) {
         CategoryEntity e = new CategoryEntity();
         e.setId(UUID.randomUUID());
-        e.setUserId(req.userId());
+        e.setUserId(userId);
         e.setName(req.name());
         e.setType(req.type());
         e.setCreatedAt(OffsetDateTime.now());
-
         return toResponse(repo.save(e));
     }
 
@@ -35,13 +34,24 @@ public class CategoryService {
         return repo.findAllByUserId(userId).stream().map(this::toResponse).toList();
     }
 
-    public CategoryResponse update(UUID id, UpdateCategoryRequest req) {
+    public CategoryResponse update(UUID userId, UUID id, UpdateCategoryRequest req) {
         CategoryEntity e = repo.findById(id).orElseThrow();
+
+        if (!e.getUserId().equals(userId)) {
+            throw new RuntimeException("Нет доступа");
+        }
+
         e.setName(req.name());
         return toResponse(repo.save(e));
     }
 
-    public void delete(UUID id) {
+    public void delete(UUID userId, UUID id) {
+        CategoryEntity e = repo.findById(id).orElseThrow();
+
+        if (!e.getUserId().equals(userId)) {
+            throw new RuntimeException("Нет доступа");
+        }
+
         repo.deleteById(id);
     }
 
