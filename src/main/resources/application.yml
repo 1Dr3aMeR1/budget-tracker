@@ -21,3 +21,8 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
+
+app:
+  jwt:
+    secret: "CHANGE_ME_TO_LONG_RANDOM_SECRET_32+_CHARS"
+    ttlMinutes: 120

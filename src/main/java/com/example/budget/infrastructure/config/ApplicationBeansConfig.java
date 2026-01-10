@@ -2,6 +2,7 @@ package com.example.budget.infrastructure.config;
 
 import com.example.budget.application.auth.AuthService;
 import com.example.budget.domain.repository.UserRepository;
+import com.example.budget.infrastructure.security.JwtService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,7 +17,11 @@ public class ApplicationBeansConfig {
     }
 
     @Bean
-    public AuthService authService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        return new AuthService(userRepository, passwordEncoder);
+    public AuthService authService(
+            UserRepository userRepository,
+            PasswordEncoder passwordEncoder,
+            JwtService jwtService
+    ) {
+        return new AuthService(userRepository, passwordEncoder, jwtService);
     }
 }
