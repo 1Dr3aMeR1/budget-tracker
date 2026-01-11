@@ -1,0 +1,47 @@
+package com.example.budget.it;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.http.*;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+class UnauthorizedAccessTest extends AbstractIntegrationTest {
+
+    @Autowired
+    TestRestTemplate rest;
+
+    @Test
+    void categoriesShouldBeForbiddenWithoutToken() {
+        ResponseEntity<String> res = rest.getForEntity("/api/categories", String.class);
+        assertThat(res.getStatusCode().value()).isIn(401, 403);
+    }
+
+    @Test
+    void transactionsShouldBeForbiddenWithoutToken() {
+        ResponseEntity<String> res = rest.getForEntity(
+                "/api/transactions?from=2026-01-01T00:00:00Z&to=2026-01-31T23:59:59Z",
+                String.class
+        );
+        assertThat(res.getStatusCode().value()).isIn(401, 403);
+    }
+
+    @Test
+    void analyticsShouldBeForbiddenWithoutToken() {
+        ResponseEntity<String> res = rest.getForEntity(
+                "/api/analytics/expenses-by-category?from=2026-01-01T00:00:00Z&to=2026-01-31T23:59:59Z",
+                String.class
+        );
+        assertThat(res.getStatusCode().value()).isIn(401, 403);
+    }
+
+    @Test
+    void authEndpointsShouldBeAccessible() {
+        ResponseEntity<String> res = rest.getForEntity("/api/auth/login", String.class);
+        // POST там нужен, но GET точно не должен быть 401/403
+        assertThat(res.getStatusCode().value()).isNotIn(401, 403);
+    }
+}
