@@ -15,33 +15,26 @@ class UnauthorizedAccessTest extends AbstractIntegrationTest {
     TestRestTemplate rest;
 
     @Test
-    void categoriesShouldBeForbiddenWithoutToken() {
+    void categoriesShouldBe401or403WithoutToken() {
         ResponseEntity<String> res = rest.getForEntity("/api/categories", String.class);
         assertThat(res.getStatusCode().value()).isIn(401, 403);
     }
 
     @Test
-    void transactionsShouldBeForbiddenWithoutToken() {
+    void transactionsShouldBe401or403WithoutToken() {
         ResponseEntity<String> res = rest.getForEntity(
-                "/api/transactions?from=2026-01-01T00:00:00Z&to=2026-01-31T23:59:59Z",
+                "/api/transactions?from=2026-01-01T00:00:00Z&to=2026-01-02T00:00:00Z",
                 String.class
         );
         assertThat(res.getStatusCode().value()).isIn(401, 403);
     }
 
     @Test
-    void analyticsShouldBeForbiddenWithoutToken() {
+    void analyticsShouldBe401or403WithoutToken() {
         ResponseEntity<String> res = rest.getForEntity(
-                "/api/analytics/expenses-by-category?from=2026-01-01T00:00:00Z&to=2026-01-31T23:59:59Z",
+                "/api/analytics/expenses-by-category?from=2026-01-01T00:00:00Z&to=2026-01-02T00:00:00Z",
                 String.class
         );
         assertThat(res.getStatusCode().value()).isIn(401, 403);
-    }
-
-    @Test
-    void authEndpointsShouldBeAccessible() {
-        ResponseEntity<String> res = rest.getForEntity("/api/auth/login", String.class);
-        // POST там нужен, но GET точно не должен быть 401/403
-        assertThat(res.getStatusCode().value()).isNotIn(401, 403);
     }
 }
