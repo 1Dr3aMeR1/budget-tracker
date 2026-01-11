@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Budget Tracker</title>
+
+    <!-- STATIC -->
+    <link rel="stylesheet" href="/assets/styles.css" />
+
+    <!-- LIBS -->
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- APP (после libs) -->
+    <script defer src="/assets/app.js"></script>
+</head>
+
+<body>
+<div class="container">
+    <h1>Budget Tracker</h1>
+
+    <section class="card">
+        <h2>Auth</h2>
+        <div class="row">
+            <input id="username" placeholder="username" />
+            <input id="password" placeholder="password" type="password" />
+        </div>
+        <div class="row">
+            <button id="btnRegister">Register</button>
+            <button id="btnLogin">Login</button>
+            <button id="btnLogout" class="secondary">Logout</button>
+        </div>
+        <div class="muted">Token: <span id="tokenState">—</span></div>
+        <pre id="authOut" class="out"></pre>
+    </section>
+
+    <section class="card">
+        <h2>Фильтр дат</h2>
+        <div class="row">
+            <label>From: <input id="fromDt" type="datetime-local" /></label>
+            <label>To: <input id="toDt" type="datetime-local" /></label>
+            <button id="btnSetMonth" class="secondary">Этот месяц</button>
+            <button id="btnRefresh">Обновить</button>
+        </div>
+        <div class="muted">Важно: формат уходит как ISO строка с timezone (мы конвертим).</div>
+    </section>
+
+    <section class="grid">
+        <section class="card">
+            <h2>Categories</h2>
+            <div class="row">
+                <input id="catName" placeholder="name" />
+                <select id="catType">
+                    <option value="EXPENSE">EXPENSE</option>
+                    <option value="INCOME">INCOME</option>
+                </select>
+                <button id="btnAddCat">Add</button>
+            </div>
+            <button id="btnLoadCats" class="secondary">Reload</button>
+            <pre id="catsOut" class="out"></pre>
+        </section>
+
+        <section class="card">
+            <h2>Transactions</h2>
+
+            <div class="row">
+                <select id="txType">
+                    <option value="EXPENSE">EXPENSE</option>
+                    <option value="INCOME">INCOME</option>
+                </select>
+                <input id="txAmount" type="number" step="0.01" placeholder="amount" />
+            </div>
+
+            <div class="row">
+                <input id="txCategoryId" placeholder="categoryId (optional)" />
+                <input id="txOccurredAt" type="datetime-local" />
+            </div>
+
+            <div class="row">
+                <input id="txNote" placeholder="note (optional)" />
+                <button id="btnAddTx">Add</button>
+            </div>
+
+            <button id="btnLoadTx" class="secondary">Reload</button>
+            <pre id="txOut" class="out"></pre>
+        </section>
+    </section>
+
+    <section class="card">
+        <h2>Analytics (Expenses by category)</h2>
+        <button id="btnLoadAnalytics" class="secondary">Reload chart</button>
+        <canvas id="pieChart" height="120"></canvas>
+        <pre id="anOut" class="out"></pre>
+    </section>
+</div>
+</body>
+</html>
