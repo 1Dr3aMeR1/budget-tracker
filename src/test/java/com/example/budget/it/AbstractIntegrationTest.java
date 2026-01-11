@@ -10,19 +10,23 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 public abstract class AbstractIntegrationTest {
 
     @Container
-    static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:15")
+    public static final PostgreSQLContainer<?> POSTGRES = new PostgreSQLContainer<>("postgres:15")
             .withDatabaseName("budget")
             .withUsername("budget")
             .withPassword("budget");
 
     @DynamicPropertySource
-    static void registerProps(DynamicPropertyRegistry r) {
-        r.add("spring.datasource.url", postgres::getJdbcUrl);
-        r.add("spring.datasource.username", postgres::getUsername);
-        r.add("spring.datasource.password", postgres::getPassword);
+    static void registerPgProps(DynamicPropertyRegistry r) {
+        r.add("spring.datasource.url", POSTGRES::getJdbcUrl);
+        r.add("spring.datasource.username", POSTGRES::getUsername);
+        r.add("spring.datasource.password", POSTGRES::getPassword);
 
-        r.add("spring.flyway.enabled", () -> true);
+        // полезно для стабильности/скорости на CI
+        r.add("spring.datasource.hikari.maximum-pool-size", () -> "5");
+        r.add("spring.datasource.hikari.connection-timeout", () -> "5000");
+        r.add("spring.datasource.hikari.validation-timeout", () -> "2000");
 
-        r.add("spring.jpa.hibernate.ddl-auto", () -> "validate");
+        // чтобы миграции всегда отрабатывали на свежей БД
+        r.add("spring.flyway.enabled", () -> "true");
     }
 }
