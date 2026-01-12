@@ -45,3 +45,24 @@ infrastructure/ - Работа с БД, безопасность, Spring
 
 - Сложность архитектуры оказалась выше, чем ожидалось
 - Некоторые задачи были оценены ниже, чем предполагалось
+
+
+## ЗАПУСК
+1) При открытом докере запустить в терминале команду
+```
+docker rm -f budget-db 2>/dev/null || true
+docker run --name budget-db \
+  -e POSTGRES_DB=budget \
+  -e POSTGRES_USER=budget \
+  -e POSTGRES_PASSWORD=budget \
+  -p 5433:5432 \
+  -d postgres:15
+```
+2)Запустить .jar из release
+```
+cd ~/Downloads
+java -jar budget-tracker-1.0.0.jar
+```
+3)Зайти на
+- http://localhost:8080/ - UI Interface
+- http://localhost:8080/swagger-ui/index.html#/ - Отладка REST API
